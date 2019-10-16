@@ -18,7 +18,7 @@
     "dev:debug": "nodemon --inspect src/server.js"
   },
   "devDependencies": {
-    "nodemon": "^1.19.3",
+    "nodemon": "^1.19.4",
     "sucrase": "^3.10.1"
   }
 }
