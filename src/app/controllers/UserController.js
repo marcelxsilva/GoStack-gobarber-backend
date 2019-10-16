@@ -26,13 +26,17 @@ class UserController {
     });
   }
   async update(req, res) {
+
     const schema = yup.object().shape({
       name: yup.string(),
       email: yup.string().email(),
       oldPassword: yup.string().min(6),
-      password: yup.string().min(6).when('oldPassword', (oldPassword, field) => {
+      password: yup.string().min(6).when('oldPassword', (oldPassword, field) =>
         oldPassword ? field.required() : field
-      })
+      ),
+      confirmPassword: yup.string().when('password', (password, field) =>
+        password ? field.required().oneOf([yup.ref('password')]) : field)
+
     });
 
     if (!(await schema.isValid(req.body))) {
