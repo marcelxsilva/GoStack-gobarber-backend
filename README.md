@@ -46,3 +46,6 @@ Utilizado para gerar um token de sessão da aplicação
 
 #### Yup
 Utilizado para validar as entradas do usuário na aplicação, algumas requisições possuem valores obrigatórios casos esses valores nao estiver presente na requisição será disparado um erro
+
+#### multer
+Para lidar com arquivos durante as requisições, utillizado para upload de arquivos.
