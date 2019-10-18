@@ -49,3 +49,8 @@ Utilizado para validar as entradas do usuário na aplicação, algumas requisiç
 
 #### multer
 Para lidar com arquivos durante as requisições, utillizado para upload de arquivos.
+
+#### date-fns
+Biblioteca utilizada para lidar com datas
+
+
