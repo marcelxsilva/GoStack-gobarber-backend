@@ -53,7 +53,7 @@ class AppointmentController {
       where: { provider_id, canceled_at: null, date: hourStart }
     })
     if (checkAvailability) { return res.status(400).json({ error: 'appointment date is no available' }) }
-
+    if (req.userId === isProvider.id) { return res.status(400).json({ error: 'only provider' }) }
     const appointment = await Appointments.create({
       user_id: req.userId,
       provider_id,
@@ -64,7 +64,6 @@ class AppointmentController {
 
     // buscando usuario que realizou agendamento
     const user = await User.findByPk(req.userId);
-
     const formatedDate = format(hourStart,
       "'Dia' dd 'de' MMMM 'ás', H:mm'h' ",
       {
