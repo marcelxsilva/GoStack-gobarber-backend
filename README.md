@@ -4,7 +4,7 @@
 ## Este projeto é baseado nas aulas do Bootcamp da Rocketseat
 
 
-## Ferramentas utilizadas
+> ## Ferramentas utilizadas
 
 #### Express
 Como alguns ja sabem, o express é um framework que facilita o desenvolvimento de APIs simples e robustas.
@@ -58,3 +58,54 @@ banco de dados noSQL rodando no docker
 
 ### mongoose
 Semelhante ao sequelize, temos o mongoose para nos ajudar a administrar nosso banco
+
+### nodemailer
+Utilizada para possibilitar o envio de emails
+
+### mailtrap.io
+Ferramenta utilizada para envio de email em ambiente de desenvolvimento [mailtrap.io](https://mailtrap.io)
+
+### handlebarsjs
+Utilizado para criar templates de emails, [handlebarsjs](handlebarsjs.com)
+
+
+> # Rotas
+
+POST - /users = criar usuario:
+```JSON
+{
+	"name": "usuario",
+	"email": "email@gmail.com",
+  "password": "123456",
+  "provider": true // aqui ficará definido se o usuario é um prestador de servico como true ou false
+}
+```
+POST - /sessions = logar usuario:
+```JSON
+{
+  "email": "email@gmail.com",
+	"password": "123456",
+}
+```
+PUT - /users = atualizar informacoes do usuario:
+```JSON
+{
+  "email": "email@gmail.com",
+  "password": "123456",
+  "name": "Usuário 2
+}
+```
+POST - /files = upload do avatar do usuario
+
+GET - /providers = pegar todos os prestadores de serviço
+
+POST - /appointments = criar novo agendamento
+```JSON
+{
+	"provider_id": 1,
+	"date": "2019-10-20T18:00:00-03:00"
+}
+```
+GET - /appointments = todos agendamentos criado pelo usuario logado
+GET - /schedule = obter todos os agendamentos do prestador logado
+GET - /notifications = obter todas as notificacoes de agendamentos do prestador
