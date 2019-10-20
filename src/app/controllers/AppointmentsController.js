@@ -2,7 +2,7 @@ import Appointments from '../models/Appointments';
 import User from '../models/User';
 import File from '../models/File';
 import NotificationSchema from '../schemas/Notification';
-import { startOfHour, parseISO, isBefore, format } from 'date-fns'
+import { startOfHour, parseISO, isBefore, format, subHours } from 'date-fns'
 import pt from 'date-fns/locale/pt';
 import * as yup from 'yup';
 
@@ -77,5 +77,17 @@ class AppointmentController {
     res.json(appointment)
   }
 
+  async delete(req, res) {
+    const appointment = await Appointments.findByPk(req.params.id);
+    if (appointment.user_id !== req.userId) { return res.status(401).json({ error: "your don't have permission to cancel this appointment " }) }
+
+    // verificando se a hora do cancelamento e menor que duas horas atras
+    const dateWithSub = subHours(appointment.date, 2);
+    if (isBefore(dateWithSub, new Date())) { return res.status(401).json({ error: 'you can only cancel appointment 2 hours in advance' }); }
+
+    appointment.canceled_at  = new Date();
+    await appointment.save()
+    return res.json(appointment)
+  }
 }
 export default new AppointmentController();
