@@ -53,4 +53,8 @@ Para lidar com arquivos durante as requisições, utillizado para upload de arqu
 #### date-fns
 Biblioteca utilizada para lidar com datas
 
+#### mongo
+banco de dados noSQL rodando no docker
 
+### mongoose
+Semelhante ao sequelize, temos o mongoose para nos ajudar a administrar nosso banco
