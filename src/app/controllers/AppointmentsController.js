@@ -5,7 +5,7 @@ import NotificationSchema from '../schemas/Notification';
 import { startOfHour, parseISO, isBefore, format, subHours } from 'date-fns'
 import pt from 'date-fns/locale/pt';
 import * as yup from 'yup';
-import mail from '../lib/Mail';
+import mail from '../../lib/Mail';
 
 class AppointmentController {
 
@@ -79,13 +79,19 @@ class AppointmentController {
   }
 
   async delete(req, res) {
-    const appointment = await Appointments.findByPk(req.params.id, {
+    const appointment = await Appointments.findOne({
+      where: { id: req.params.id, canceled_at: null},
       include: [{
         model: User,
         as: 'provider',
         attributes: ['name', 'email']
+      },
+      {
+        model: User,
+        as: 'user',
+        attributes: ['name']
       }]
-    });
+    })
     if (appointment.user_id !== req.userId) { return res.status(401).json({ error: "your don't have permission to cancel this appointment " }) }
 
     // verificando se a hora do cancelamento e menor que duas horas atras
@@ -94,11 +100,22 @@ class AppointmentController {
 
     appointment.canceled_at = new Date();
     await appointment.save();
+
+    // envio de email
     mail.sendMail({
       to: `${appointment.provider.name} <${appointment.provider.email}>`,
       subject: 'Agendamento Cancelado',
-      html: 'Voce tem um novo cancelamento'
-    })
+      template: 'cancellation',
+      context: {
+        provider: appointment.provider.name,
+        user: appointment.user.name,
+        date: format(appointment.date,
+          "'Dia' dd 'de' MMMM 'ás', H:mm'h' ",
+          { locale: pt }
+        )
+      }
+    });
+
     return res.json(appointment)
   }
 }
