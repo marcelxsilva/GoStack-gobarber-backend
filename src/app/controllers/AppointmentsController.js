@@ -5,7 +5,8 @@ import NotificationSchema from '../schemas/Notification';
 import { startOfHour, parseISO, isBefore, format, subHours } from 'date-fns'
 import pt from 'date-fns/locale/pt';
 import * as yup from 'yup';
-import mail from '../../lib/Mail';
+import Queue from '../../lib/Queue';
+import CancellationMail from '../../app/jobs/CancellationMail';
 
 class AppointmentController {
 
@@ -80,7 +81,7 @@ class AppointmentController {
 
   async delete(req, res) {
     const appointment = await Appointments.findOne({
-      where: { id: req.params.id, canceled_at: null},
+      where: { id: req.params.id, canceled_at: null },
       include: [{
         model: User,
         as: 'provider',
@@ -102,19 +103,7 @@ class AppointmentController {
     await appointment.save();
 
     // envio de email
-    mail.sendMail({
-      to: `${appointment.provider.name} <${appointment.provider.email}>`,
-      subject: 'Agendamento Cancelado',
-      template: 'cancellation',
-      context: {
-        provider: appointment.provider.name,
-        user: appointment.user.name,
-        date: format(appointment.date,
-          "'Dia' dd 'de' MMMM 'ás', H:mm'h' ",
-          { locale: pt }
-        )
-      }
-    });
+    await Queue.add(CancellationMail.key, { appointment })
 
     return res.json(appointment)
   }
