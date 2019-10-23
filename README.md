@@ -68,6 +68,8 @@ Ferramenta utilizada para envio de email em ambiente de desenvolvimento [mailtra
 ### handlebarsjs
 Utilizado para criar templates de emails, [handlebarsjs](handlebarsjs.com)
 
+### Sentry
+utilizado para monitorar a aplicação e erros
 
 > # Rotas
 
