@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import Sequelize from 'sequelize';
 import mongoose from 'mongoose';
 import databaseConfig from '../config/database';
@@ -12,7 +13,6 @@ class Database {
     this.mongo()
   }
   init() {
-    console.log(databaseConfig)
     this.connection = new Sequelize(databaseConfig);
     models
       .map(model => model.init(this.connection))
