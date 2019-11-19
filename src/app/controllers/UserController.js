@@ -1,4 +1,5 @@
 import User from '../models/User';
+import File from '../models/File';
 import * as yup from 'yup';
 
 class UserController {
@@ -6,7 +7,7 @@ class UserController {
     const schema = yup.object().shape({
       name: yup.string().required(),
       email: yup.string().email().required(),
-      password: yup.string().required().min(6)
+      password: yup.string().required().min(6),
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -31,6 +32,7 @@ class UserController {
       name: yup.string(),
       email: yup.string().email(),
       oldPassword: yup.string().min(6),
+      avatar_id: yup.string(),
       password: yup.string().min(6).when('oldPassword', (oldPassword, field) =>
         oldPassword ? field.required() : field
       ),
@@ -55,12 +57,23 @@ class UserController {
       return res.status(401).json({ error: 'password does not match' });
     }
 
-    const { id, name, provider } = await user.update(req.body);
+    await user.update(req.body);
+
+    const { id, name, avatar } = await User.findByPk(req.userId, {
+      include: [
+        {
+          model: File,
+          as: 'avatar',
+          attributes: ['id', 'path', 'url']
+        }
+      ]
+    });
+
     return res.json({
       id,
       name,
       email,
-      provider
+      avatar
     })
   }
 }
