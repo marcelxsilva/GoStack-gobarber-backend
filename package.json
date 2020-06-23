@@ -23,7 +23,7 @@
     "sequelize": "^5.19.6",
     "sequelize-cli": "^5.5.1",
     "youch": "^2.0.10",
-    "yup": "^0.27.0"
+    "yup": "^0.29.1"
   },
   "scripts": {
     "dev": "nodemon src/server.js",
